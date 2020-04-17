@@ -1,0 +1,14 @@
+version: '3.4'
+services:
+  vending_machine:
+    build: .
+    container_name: vending_machine
+    command: tail -f /dev/null
+    volumes:
+      - ./:/srv/app:rw,cached
+    networks:
+      - vending_machine
+
+networks:
+  vending_machine:
+    driver: bridge
