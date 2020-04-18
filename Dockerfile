@@ -12,6 +12,7 @@ RUN apk add --no-cache \
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer global require hirak/prestissimo
+ENV PATH "$PATH:/srv/app/vendor/bin"
 
 # Redis
 RUN pecl install redis
