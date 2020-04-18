@@ -1,0 +1,17 @@
+default:
+    suites:
+        default:
+            paths:
+                -  "%paths.base%/tests/behat/features"
+            contexts:
+                - App\Tests\Behat\Contexts\CliContext:
+                    kernel: '@kernel'
+                - App\Tests\Behat\Contexts\VendingMachineContext:
+                    vendingMachineService: '@App\Application\VendingMachineService'
+                    storage: '@App\Domain\VendingMachineStorage'
+
+    extensions:
+        Behat\Symfony2Extension:
+            kernel:
+                bootstrap: tests/bootstrap.php
+                class: App\Infrastructure\Kernel
