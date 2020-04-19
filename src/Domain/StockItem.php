@@ -10,9 +10,9 @@ class StockItem
     private Money $price;
     private Count $count;
 
-    public static function from(StockItem $stockItem): StockItem
+    public static function from(StockItem $stockItem): self
     {
-        return new StockItem($stockItem->name(), $stockItem->price(), $stockItem->count());
+        return new self($stockItem->name(), $stockItem->price(), $stockItem->count());
     }
 
     public function __construct(ItemName $name, Money $price, ?Count $count = null)

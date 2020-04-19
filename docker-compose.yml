@@ -9,10 +9,10 @@ services:
     networks:
       - vending_machine
     environment:
-      - REDIS_HOST=redis-vending_machine
+      - REDIS_HOST=redis_vending_machine
       - REDIS_PORT=6379
   redis:
-    container_name: redis-vending_machine
+    container_name: redis_vending_machine
     image: redis
     ports:
       - "6379:6379"

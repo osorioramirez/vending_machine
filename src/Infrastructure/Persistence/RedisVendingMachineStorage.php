@@ -19,7 +19,7 @@ class RedisVendingMachineStorage implements VendingMachineStorage
         $this->redis = new Redis();
         $this->redis->connect($host, $port);
         $this->redis->setOption(Redis::OPT_SERIALIZER, Redis::SERIALIZER_PHP);
-        $this->redis->setOption(Redis::OPT_PREFIX, Redis::SERIALIZER_PHP);
+        $this->redis->setOption(Redis::OPT_PREFIX, $prefix.':');
     }
 
     public function load(): ?VendingMachine

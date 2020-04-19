@@ -71,4 +71,12 @@ class CliContext implements Context
     {
         Assert::assertEquals($statusCode, $this->commandTester->getStatusCode());
     }
+
+    /**
+     * @Given print last display
+     */
+    public function printLastDisplay()
+    {
+        echo $this->commandTester->getDisplay();
+    }
 }
