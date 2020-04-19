@@ -55,6 +55,10 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "test": [
+            "phpunit",
+            "behat -f progress"
         ]
     },
     "conflict": {

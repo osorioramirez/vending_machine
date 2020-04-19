@@ -7,6 +7,7 @@ namespace App\Application;
 use App\Domain\Coin;
 use App\Domain\Count;
 use App\Domain\ItemName;
+use App\Domain\Money;
 use App\Domain\StockCoin;
 use App\Domain\StockItem;
 use App\Domain\VendingMachine;
@@ -19,6 +20,18 @@ class VendingMachineService
     public function __construct(VendingMachineStorage $storage)
     {
         $this->storage = $storage;
+    }
+
+    public function amount(): Money
+    {
+        return $this->vendingMachine()->amount();
+    }
+
+    public function insertCoin(Coin $coin): void
+    {
+        $vendingMachine = $this->vendingMachine();
+        $vendingMachine->insertCoin($coin);
+        $this->storage->save($vendingMachine);
     }
 
     public function addItems(ItemName $name, Count $count): void

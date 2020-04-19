@@ -69,6 +69,7 @@ class CountTest extends TestCase
     public function it_fails_to_dec_zero_count(): void
     {
         $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Cannot decrement. The current count is 0.');
 
         $count = new Count(0);
         $count->dec();

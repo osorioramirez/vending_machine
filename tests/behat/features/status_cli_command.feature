@@ -13,6 +13,7 @@ Feature: Status cli command
       | coin  | count |
       | 0.05  | 10    |
       | 0.25  | 15    |
+    And I insert a 0.10 coin
     When I execute the cli command "app:status"
     And the display should be equals to:
      """
@@ -31,6 +32,7 @@ Feature: Status cli command
      | 0.25             | 15                |
      | 1.00             | 0                 |
      +------------------+-------------------+
+     Amount: 0.10
 
      """
     And the exit status code should be equal to 0
