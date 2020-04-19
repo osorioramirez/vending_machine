@@ -16,6 +16,36 @@ class MoneyTest extends TestCase
     {
         $money = new Money(10);
 
-        $this->assertEquals(10, $money->amount());
+        $this->assertEquals(10, $money->cents());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_created_from_a_float(): void
+    {
+        $money = Money::fromFloat(5.35);
+
+        $this->assertEquals(535, $money->cents());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_converted_to_float(): void
+    {
+        $money = new Money(535);
+
+        $this->assertEquals(5.35, $money->toFloat());
+    }
+
+    /**
+     * @test
+     */
+    public function it_can_be_converted_to_string(): void
+    {
+        $money = new Money(10);
+
+        $this->assertEquals('0.10', (string) $money);
     }
 }

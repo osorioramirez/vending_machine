@@ -33,4 +33,9 @@ class Count
     {
         return $this->value;
     }
+
+    public function __toString()
+    {
+        return (string) $this->value();
+    }
 }

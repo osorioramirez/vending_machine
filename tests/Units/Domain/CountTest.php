@@ -73,4 +73,14 @@ class CountTest extends TestCase
         $count = new Count(0);
         $count->dec();
     }
+
+    /**
+     * @test
+     */
+    public function it_can_be_converted_to_string(): void
+    {
+        $count = new Count(10);
+
+        $this->assertEquals('10', (string) $count);
+    }
 }

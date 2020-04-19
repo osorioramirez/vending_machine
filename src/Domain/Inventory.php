@@ -34,6 +34,17 @@ class Inventory
         return StockItem::from($this->ensureStockItem($name));
     }
 
+    /**
+     * @return StockItem[]
+     */
+    public function stockItems(): array
+    {
+        return array_map(
+            fn (ItemName $name): StockItem => $this->stockItem($name),
+            ItemName::values()
+        );
+    }
+
     private function ensureStockItem(ItemName $name): StockItem
     {
         if (!isset($this->stock[(string) $name])) {

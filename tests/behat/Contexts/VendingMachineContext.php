@@ -3,6 +3,7 @@
 namespace App\Tests\Behat\Contexts;
 
 use App\Application\VendingMachineService;
+use App\Domain\Coin;
 use App\Domain\Count;
 use App\Domain\ItemName;
 use App\Domain\VendingMachineStorage;
@@ -40,6 +41,20 @@ class VendingMachineContext implements Context
     }
 
     /**
+     * @Given I provision the vending machine with the following coins:
+     */
+    public function iProvisionTheVendingMachineWithTheFollowingCoins(TableNode $table)
+    {
+        foreach ($table->getHash() as $row) {
+            Coin::assertIsValidStringValue($row['coin']);
+            $this->vendingMachineService->addCoins(
+                Coin::fromString($row['coin']),
+                new Count($row['count'])
+            );
+        }
+    }
+
+    /**
      * @Then the :itemName stock must be equal to :count
      */
     public function theStockMustBeEqualTo($itemName, $count)
@@ -47,6 +62,17 @@ class VendingMachineContext implements Context
         Assert::assertEquals(
             $count,
             $this->vendingMachineService->stockItem(new ItemName($itemName))->count()->value()
+        );
+    }
+
+    /**
+     * @Given the :coin coin stock must be equal to :count
+     */
+    public function theCoinStockMustBeEqualTo($coin, $count)
+    {
+        Assert::assertEquals(
+            $count,
+            $this->vendingMachineService->stockCoin(Coin::fromString($coin))->count()->value()
         );
     }
 }
