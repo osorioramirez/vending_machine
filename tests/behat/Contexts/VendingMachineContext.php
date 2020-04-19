@@ -75,4 +75,20 @@ class VendingMachineContext implements Context
             $this->vendingMachineService->stockCoin(Coin::fromString($coin))->count()->value()
         );
     }
+
+    /**
+     * @Given I insert a :coin coin
+     */
+    public function iInsertACoin($coin)
+    {
+        $this->vendingMachineService->insertCoin(Coin::fromString($coin));
+    }
+
+    /**
+     * @Then the amount should be equal to :amount
+     */
+    public function theAmountShouldBeEqualTo($amount)
+    {
+        Assert::assertEquals((float) $amount, $this->vendingMachineService->amount()->toFloat());
+    }
 }

@@ -48,4 +48,26 @@ class MoneyTest extends TestCase
 
         $this->assertEquals('0.10', (string) $money);
     }
+
+    /**
+     * @test
+     */
+    public function adding_a_money_returns_the_sum_of_both(): void
+    {
+        $money = new Money(10);
+        $result = $money->add(new Money(5));
+
+        $this->assertEquals(15, $result->cents());
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_be_immutable_after_an_addition(): void
+    {
+        $money = new Money(10);
+        $money->add(new Money(5));
+
+        $this->assertEquals(10, $money->cents());
+    }
 }

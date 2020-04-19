@@ -18,6 +18,11 @@ class Money
         $this->cents = $cents;
     }
 
+    public function add(Money $money): self
+    {
+        return new Money($this->cents() + $money->cents());
+    }
+
     public function cents(): int
     {
         return $this->cents;
@@ -26,6 +31,11 @@ class Money
     public function toFloat(): float
     {
         return $this->cents() / 100.0;
+    }
+
+    public function equals(Money $money): bool
+    {
+        return $this->cents() === $money->cents();
     }
 
     public function __toString()

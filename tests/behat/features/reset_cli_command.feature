@@ -24,3 +24,14 @@ Feature: Reset cli command
 
      """
     And the exit status code should be equal to 0
+
+  Scenario: It cannot be reset with coins
+    Given I am the system
+    And I insert a 0.25 coin
+    When I execute the cli command "app:reset"
+    Then the display should be equals to:
+     """
+     The machine cannot be reset. Extract the coins first
+
+     """
+    And the exit status code should be equal to 1

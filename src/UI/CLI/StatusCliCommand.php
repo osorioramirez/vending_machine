@@ -36,6 +36,9 @@ class StatusCliCommand extends Command
             $this->renderInventory($this->machineService->stockItems(), $output);
             $this->renderCashRegister($this->machineService->stockCoins(), $output);
 
+            $amount = $this->machineService->amount();
+            $output->writeln(sprintf('<info>Amount: <comment>%s</comment></info>', $amount));
+
             return 0;
         } catch (\Exception $e) {
             $output->writeln(sprintf('<error>%s</error>', $e->getMessage()));
