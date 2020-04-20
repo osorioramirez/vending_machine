@@ -25,9 +25,19 @@ class Coin extends Enum
      */
     public static function valuesToMoney(): array
     {
+        return self::coinsToMoney(self::values());
+    }
+
+    /**
+     * @param Coin[] $coins
+     *
+     * @return Money[]
+     */
+    public static function coinsToMoney(array $coins): array
+    {
         return array_map(
             fn (self $coin): Money => $coin->toMoney(),
-            self::values()
+            $coins
         );
     }
 

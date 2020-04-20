@@ -11,22 +11,19 @@ class VendingMachine implements AggregateRoot
 {
     private Inventory $inventory;
     private CashRegister $cashRegister;
-    /** @var Coin[] */
-    private array $coins;
     private Money $amount;
 
     public function __construct()
     {
         $this->inventory = new Inventory();
         $this->cashRegister = new CashRegister();
-        $this->coins = [];
-        $this->amount = new Money(0);
+        $this->amount = Money::zero();
     }
 
     public function insertCoin(Coin $coin): void
     {
-        $this->coins[] = $coin;
         $this->amount = $this->amount->add($coin->toMoney());
+        $this->cashRegister->addCoin($coin);
     }
 
     public function amount(): Money
@@ -34,9 +31,31 @@ class VendingMachine implements AggregateRoot
         return $this->amount;
     }
 
+    public function expendItem(ItemName $name): ExpendResult
+    {
+        $itemStock = $this->stockItem($name);
+        if ($itemStock->count()->value() === 0) {
+            return ExpendResult::notAvailable($name);
+        }
+
+        if ($itemStock->price()->isGreaterThan($this->amount())) {
+            return ExpendResult::notEnoughAmount($name);
+        }
+
+        $change = $this->cashRegister->change($this->amount()->subtract($itemStock->price()));
+        if ($change === null) {
+            return ExpendResult::notChange($name);
+        }
+
+        $this->inventory->expendItem($name);
+        $this->amount = Money::zero();
+
+        return ExpendResult::expended($name, $change);
+    }
+
     public function reset(): void
     {
-        Assert::isEmpty($this->coins, 'The machine cannot be reset. Extract the coins first');
+        Assert::true($this->amount()->isZero(), 'The machine cannot be reset. Extract the coins first');
 
         $this->inventory->reset();
         $this->cashRegister->reset();

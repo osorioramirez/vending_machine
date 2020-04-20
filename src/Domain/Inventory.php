@@ -29,6 +29,12 @@ class Inventory
         $stockItem->setCount($stockItem->count()->add($count));
     }
 
+    public function expendItem(ItemName $name): void
+    {
+        $stockItem = $this->ensureStockItem($name);
+        $stockItem->setCount($stockItem->count()->dec());
+    }
+
     public function stockItem(ItemName $name): StockItem
     {
         return StockItem::from($this->ensureStockItem($name));
