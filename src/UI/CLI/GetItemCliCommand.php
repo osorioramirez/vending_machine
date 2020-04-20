@@ -58,7 +58,7 @@ EOF
                     $coins = implode(', ', Coin::coinsToMoney($result->change()->coins()));
                     $output->writeln(sprintf('<info>Enjoy your <comment>%s</comment>!</info>', $result->name()));
                     $output->writeln(sprintf('<info>Change: <comment>%s</comment></info>', $result->change()->amount()));
-                    $output->writeln(sprintf('<info>Coins: <comment>%s</comment></info>', $coins));
+                    $output->writeln(sprintf('<info>Coins: <comment>%s</comment></info>', empty($coins) ? 'None' : $coins));
                     break;
                 case ExpendResultStatus::NOT_CHANGE():
                     $output->writeln('<info>Sorry, <comment>not change</comment></info>');
