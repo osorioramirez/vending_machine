@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Webmozart\Assert\Assert;
 
-class ServiceCashCliCommand extends Command
+class ServiceCoinsCliCommand extends Command
 {
     private VendingMachineService $machineService;
 
@@ -30,12 +30,12 @@ class ServiceCashCliCommand extends Command
         $coins = implode(', ', $coins);
 
         $this
-            ->setName('app:service:cash')
+            ->setName('app:service:coins')
             ->setDescription('Stock the machine with coins')
             ->addArgument('coin', InputArgument::REQUIRED, 'The coin value: '.$coins)
             ->addArgument('count', InputArgument::REQUIRED, 'The count to add')
             ->setHelp(<<<EOF
-The <info>%command.name%</info> command stock the machine with cash:
+The <info>%command.name%</info> command stock the machine with coins:
 
   <info>%command.full_name% {$coin} 30</info>
 

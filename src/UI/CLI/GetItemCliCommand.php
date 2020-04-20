@@ -31,7 +31,7 @@ class GetItemCliCommand extends Command
 
         $this
             ->setName('app:get')
-            ->setDescription('Get item')
+            ->setDescription('Get an item')
             ->addArgument('name', InputArgument::REQUIRED, 'The item name: '.$itemNames)
             ->setHelp(<<<EOF
 The <info>%command.name%</info> command allows to get an item:
