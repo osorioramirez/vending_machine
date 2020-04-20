@@ -53,6 +53,19 @@ class VendingMachine implements AggregateRoot
         return ExpendResult::expended($name, $change);
     }
 
+    public function returnCoins(): Change
+    {
+        $change = $this->cashRegister->change($this->amount());
+        if ($change !== null) {
+            $this->amount = Money::zero();
+
+            return $change;
+        }
+
+        // it should never happen
+        throw new \LogicException('Sorry, cannot perform this action in that moment');
+    }
+
     public function reset(): void
     {
         Assert::true($this->amount()->isZero(), 'The machine cannot be reset. Extract the coins first');

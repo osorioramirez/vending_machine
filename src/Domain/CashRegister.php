@@ -62,12 +62,12 @@ class CashRegister
 
     private function bruteForceChange(Money $amount, array $coins, int $index, Change $change): ?Change
     {
-        if ($amount->isNegative() || $index >= count($coins)) {
-            return null;
-        }
-
         if ($amount->isZero()) {
             return $change;
+        }
+
+        if ($amount->isNegative() || $index >= count($coins)) {
+            return null;
         }
 
         /** @var Coin $coin */

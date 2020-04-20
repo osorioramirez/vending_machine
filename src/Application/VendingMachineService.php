@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Application;
 
+use App\Domain\Change;
 use App\Domain\Coin;
 use App\Domain\Count;
 use App\Domain\ExpendResult;
@@ -39,6 +40,15 @@ class VendingMachineService
     {
         $vendingMachine = $this->vendingMachine();
         $result = $vendingMachine->expendItem($name);
+        $this->storage->save($vendingMachine);
+
+        return $result;
+    }
+
+    public function returnCoins(): Change
+    {
+        $vendingMachine = $this->vendingMachine();
+        $result = $vendingMachine->returnCoins();
         $this->storage->save($vendingMachine);
 
         return $result;

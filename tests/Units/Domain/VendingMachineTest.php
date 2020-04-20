@@ -120,6 +120,43 @@ class VendingMachineTest extends TestCase
     /**
      * @test
      */
+    public function it_should_return_insert_coins(): void
+    {
+        $this->vendingMachine->insertCoin(Coin::TWENTY_FIVE_CENTS());
+        $this->vendingMachine->insertCoin(Coin::TWENTY_FIVE_CENTS());
+
+        $change = $this->vendingMachine->returnCoins();
+
+        $this->assertEquals(50, $change->amount()->cents());
+        $this->assertEquals([Coin::TWENTY_FIVE_CENTS(), Coin::TWENTY_FIVE_CENTS()], $change->coins());
+        $this->assertEquals(0, $this->vendingMachine->amount()->cents());
+        $this->assertEquals(0, $this->vendingMachine->stockCoin(Coin::TWENTY_FIVE_CENTS())->count()->value());
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_return_a_change_equals_to_insert_coins(): void
+    {
+        $this->vendingMachine->addCoins(Coin::ONE_UNIT(), new Count(1));
+
+        $this->vendingMachine->insertCoin(Coin::TWENTY_FIVE_CENTS());
+        $this->vendingMachine->insertCoin(Coin::TWENTY_FIVE_CENTS());
+        $this->vendingMachine->insertCoin(Coin::TWENTY_FIVE_CENTS());
+        $this->vendingMachine->insertCoin(Coin::TWENTY_FIVE_CENTS());
+
+        $change = $this->vendingMachine->returnCoins();
+
+        $this->assertEquals(100, $change->amount()->cents());
+        $this->assertEquals([Coin::ONE_UNIT()], $change->coins());
+        $this->assertEquals(0, $this->vendingMachine->amount()->cents());
+        $this->assertEquals(4, $this->vendingMachine->stockCoin(Coin::TWENTY_FIVE_CENTS())->count()->value());
+        $this->assertEquals(0, $this->vendingMachine->stockCoin(Coin::ONE_UNIT())->count()->value());
+    }
+
+    /**
+     * @test
+     */
     public function it_should_be_empty_after_reset(): void
     {
         $this->vendingMachine->addItems(ItemName::WATER(), new Count(10));
