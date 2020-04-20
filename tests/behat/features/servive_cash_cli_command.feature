@@ -5,7 +5,7 @@ Feature: Service cash cli command
 
   Scenario: It stock increases after service coins
     Given I am the system
-    When I execute the cli command "app:service:cash" with arguments:
+    When I execute the cli command "app:service:coins" with arguments:
       | argument | value |
       | coin     | 0.25  |
       | count    | 10    |
@@ -19,7 +19,7 @@ Feature: Service cash cli command
 
   Scenario: It fails with invalid coin
     Given I am the system
-    When I execute the cli command "app:service:cash" with arguments:
+    When I execute the cli command "app:service:coins" with arguments:
       | argument | value |
       | coin     | 0.35  |
       | count    | 10    |
@@ -32,7 +32,7 @@ Feature: Service cash cli command
 
   Scenario: It fails with invalid count
     Given I am the system
-    When I execute the cli command "app:service:cash" with arguments:
+    When I execute the cli command "app:service:coins" with arguments:
       | argument | value |
       | coin     | 0.25  |
       | count    | -10   |
@@ -45,7 +45,7 @@ Feature: Service cash cli command
 
   Scenario: It fails with non numeric count
     Given I am the system
-    When I execute the cli command "app:service:cash" with arguments:
+    When I execute the cli command "app:service:coins" with arguments:
       | argument | value |
       | coin     | 0.25  |
       | count    | foo   |

@@ -23,7 +23,7 @@ class ResetCliCommand extends Command
     {
         $this
             ->setName('app:reset')
-            ->setDescription('Reset vending machine')
+            ->setDescription('Reset vending machine (for debug)')
         ;
     }
 
