@@ -4,8 +4,9 @@ services:
     build: .
     container_name: vending_machine
     command: tail -f /dev/null
-    volumes:
-      - ./:/srv/app:rw,cached
+#    Uncomment on dev
+#    volumes:
+#      - ./:/srv/app:rw,cached
     networks:
       - vending_machine
     environment:
