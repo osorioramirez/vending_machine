@@ -6,6 +6,7 @@ namespace App\Application;
 
 use App\Domain\Coin;
 use App\Domain\Count;
+use App\Domain\ExpendResult;
 use App\Domain\ItemName;
 use App\Domain\Money;
 use App\Domain\StockCoin;
@@ -32,6 +33,15 @@ class VendingMachineService
         $vendingMachine = $this->vendingMachine();
         $vendingMachine->insertCoin($coin);
         $this->storage->save($vendingMachine);
+    }
+
+    public function expendItem(ItemName $name): ExpendResult
+    {
+        $vendingMachine = $this->vendingMachine();
+        $result = $vendingMachine->expendItem($name);
+        $this->storage->save($vendingMachine);
+
+        return $result;
     }
 
     public function addItems(ItemName $name, Count $count): void

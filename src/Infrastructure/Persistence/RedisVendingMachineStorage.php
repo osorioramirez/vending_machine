@@ -26,7 +26,7 @@ class RedisVendingMachineStorage implements VendingMachineStorage
     {
         $vendingMachine = $this->redis->get(self::KEY);
 
-        return false !== $vendingMachine ? $vendingMachine : null;
+        return $vendingMachine !== false ? $vendingMachine : null;
     }
 
     public function save(VendingMachine $vendingMachine)

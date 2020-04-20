@@ -13,6 +13,11 @@ class Money
         return new Money((int) round($vale * 100, 0));
     }
 
+    public static function zero(): self
+    {
+        return new self(0);
+    }
+
     public function __construct(int $cents)
     {
         $this->cents = $cents;
@@ -21,6 +26,11 @@ class Money
     public function add(Money $money): self
     {
         return new Money($this->cents() + $money->cents());
+    }
+
+    public function subtract(Money $money): Money
+    {
+        return new Money($this->cents() - $money->cents());
     }
 
     public function cents(): int
@@ -33,9 +43,44 @@ class Money
         return $this->cents() / 100.0;
     }
 
-    public function equals(Money $money): bool
+    public function equals(Money $other): bool
     {
-        return $this->cents() === $money->cents();
+        return $this->compareTo($other) === 0;
+    }
+
+    public function isGreaterThan(Money $other): bool
+    {
+        return $this->compareTo($other) === 1;
+    }
+
+    public function isGreaterThanOrEqualTo(Money $other): bool
+    {
+        return $this->compareTo($other) >= 0;
+    }
+
+    public function isLessThan(Money $other): bool
+    {
+        return $this->compareTo($other) === -1;
+    }
+
+    public function isLessThanOrEqualTo(Money $other): bool
+    {
+        return $this->compareTo($other) <= 0;
+    }
+
+    public function compareTo(Money $other): int
+    {
+        return $this->cents() <=> $other->cents();
+    }
+
+    public function isZero(): bool
+    {
+        return $this->equals(self::zero());
+    }
+
+    public function isNegative(): bool
+    {
+        return $this->isLessThan(self::zero());
     }
 
     public function __toString()
