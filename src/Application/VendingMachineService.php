@@ -29,6 +29,11 @@ class VendingMachineService
         return $this->vendingMachine()->amount();
     }
 
+    public function totalCash(): Money
+    {
+        return $this->vendingMachine()->totalCash();
+    }
+
     public function insertCoin(Coin $coin): void
     {
         $vendingMachine = $this->vendingMachine();

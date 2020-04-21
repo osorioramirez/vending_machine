@@ -21,9 +21,11 @@ class Change
         $this->coins = $coins;
     }
 
-    public function addCoin(Coin $coin): self
+    public function addCoins(Coin $coin, Count $count): self
     {
-        return new self($this->amount()->add($coin->toMoney()), array_merge($this->coins, [$coin]));
+        return new self(
+            $this->amount()->add($coin->toMoney()->multiplyBy($count->value())),
+            array_merge($this->coins, array_fill(0, $count->value(), $coin)));
     }
 
     public function amount(): Money

@@ -56,8 +56,13 @@ class Coin extends Enum
         return new self(Money::fromFloat((float) $value)->cents());
     }
 
+    public function cents(): int
+    {
+        return $this->getValue();
+    }
+
     public function toMoney(): Money
     {
-        return new Money($this->getValue());
+        return new Money($this->cents());
     }
 }

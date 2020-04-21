@@ -19,14 +19,14 @@ class Count
 
     public function add(Count $count): Count
     {
-        return new Count($this->value() + $count->value());
+        return new self($this->value() + $count->value());
     }
 
     public function dec(): Count
     {
         Assert::greaterThan($this->value(), 0, 'Cannot decrement. The current count is 0.');
 
-        return new Count($this->value() - 1);
+        return new self($this->value() - 1);
     }
 
     public function value(): int

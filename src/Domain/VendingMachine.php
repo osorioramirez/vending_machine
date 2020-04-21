@@ -31,6 +31,11 @@ class VendingMachine implements AggregateRoot
         return $this->amount;
     }
 
+    public function totalCash(): Money
+    {
+        return $this->cashRegister->total();
+    }
+
     public function expendItem(ItemName $name): ExpendResult
     {
         $itemStock = $this->stockItem($name);

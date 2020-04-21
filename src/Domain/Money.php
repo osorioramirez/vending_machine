@@ -10,7 +10,7 @@ class Money
 
     public static function fromFloat(float $vale): self
     {
-        return new Money((int) round($vale * 100, 0));
+        return new self((int) round($vale * 100, 0));
     }
 
     public static function zero(): self
@@ -25,12 +25,17 @@ class Money
 
     public function add(Money $money): self
     {
-        return new Money($this->cents() + $money->cents());
+        return new self($this->cents() + $money->cents());
     }
 
-    public function subtract(Money $money): Money
+    public function subtract(Money $money): self
     {
-        return new Money($this->cents() - $money->cents());
+        return new self($this->cents() - $money->cents());
+    }
+
+    public function multiplyBy(float $multiplier): self
+    {
+        return new self((int) round($this->cents() * $multiplier, 0));
     }
 
     public function cents(): int
