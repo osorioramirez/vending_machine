@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\UI\CLI;
 
 use App\Application\VendingMachineService;
+use App\Domain\Money;
 use App\Domain\StockCoin;
 use App\Domain\StockItem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -34,7 +36,7 @@ class StatusCliCommand extends Command
     {
         try {
             $this->renderInventory($this->machineService->stockItems(), $output);
-            $this->renderCashRegister($this->machineService->stockCoins(), $output);
+            $this->renderCashRegister($this->machineService->stockCoins(), $this->machineService->totalCash(), $output);
 
             $amount = $this->machineService->amount();
             $output->writeln(sprintf('<info>Amount: <comment>%s</comment></info>', $amount));
@@ -64,16 +66,22 @@ class StatusCliCommand extends Command
         $table->render();
     }
 
-    private function renderCashRegister(array $stockCoins, OutputInterface $output)
+    private function renderCashRegister(array $stockCoins, Money $total, OutputInterface $output)
     {
         $table = new Table($output);
         $table
             ->setHeaderTitle('Cash Register')
             ->setHeaders(['Coin', 'Count'])
             ->setRows(
-                array_map(
-                    fn (StockCoin $stockCoin): array => [$stockCoin->coin()->toMoney(), $stockCoin->count()],
-                    $stockCoins
+                array_merge(
+                    array_map(
+                        fn (StockCoin $stockCoin): array => [$stockCoin->coin()->toMoney(), $stockCoin->count()],
+                        $stockCoins
+                    ),
+                    [
+                        new TableSeparator(),
+                        ['Total', $total],
+                    ]
                 )
             )
             ->setColumnWidths([16, 17]);

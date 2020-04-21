@@ -8,15 +8,22 @@ class CashRegister
 {
     /** @var StockCoin[] */
     private array $stock;
+    private Money $total;
 
     public function __construct()
     {
         $this->reset();
     }
 
+    public function total(): Money
+    {
+        return $this->total;
+    }
+
     public function reset(): void
     {
         $this->stock = [];
+        $this->total = Money::zero();
     }
 
     public function addCoin(Coin $coin): void
@@ -28,6 +35,7 @@ class CashRegister
     {
         $stockCoin = $this->ensureStockCoin($coin);
         $stockCoin->setCount($stockCoin->count()->add($count));
+        $this->total = $this->total->add($coin->toMoney()->multiplyBy($count->value()));
     }
 
     public function stockCoin(Coin $coin): StockCoin
@@ -52,7 +60,11 @@ class CashRegister
             return Change::zero();
         }
 
-        $change = $this->bruteForceChange($amount, $this->coinsArray(), 0, Change::zero());
+        if ($amount->isGreaterThan($this->total())) {
+            return null;
+        }
+
+        $change = $this->bruteForceChange($amount, $this->sortedStock(), 0, Change::zero());
         if ($change !== null) {
             $this->withdrawChange($change);
         }
@@ -60,41 +72,40 @@ class CashRegister
         return $change;
     }
 
-    private function bruteForceChange(Money $amount, array $coins, int $index, Change $change): ?Change
+    private function bruteForceChange(Money $amount, array $stock, int $index, Change $change): ?Change
     {
         if ($amount->isZero()) {
             return $change;
         }
 
-        if ($amount->isNegative() || $index >= count($coins)) {
+        if ($amount->isNegative() || $index >= count($stock)) {
             return null;
         }
 
-        /** @var Coin $coin */
-        $coin = $coins[$index];
-        $changeFound = $this->bruteForceChange(
-            $amount->subtract($coin->toMoney()),
-            $coins,
-            $index + 1,
-            $change->addCoin($coin)
-        );
+        /** @var StockCoin $stockCoin */
+        $stockCoin = $stock[$index];
+        $changeFound = null;
+        $coinsCount = min(intdiv($amount->cents(), $stockCoin->coin()->cents()), $stockCoin->count()->value());
+        while ($coinsCount > 0 && $changeFound === null) {
+            $changeFound = $this->bruteForceChange(
+                $amount->subtract($stockCoin->coin()->toMoney()->multiplyBy($coinsCount)),
+                $stock,
+                $index + 1,
+                $change->addCoins($stockCoin->coin(), new Count($coinsCount))
+            );
 
-        return $changeFound ?? $this->bruteForceChange($amount, $coins, $index + 1, $change);
+            --$coinsCount;
+        }
+
+        return $changeFound ?? $this->bruteForceChange($amount, $stock, $index + 1, $change);
     }
 
-    private function coinsArray(): array
+    private function sortedStock(): array
     {
         $stock = array_values($this->stock);
-        usort($stock, fn (StockCoin $a, StockCoin $b): int => $b->coin()->getValue() <=> $a->coin()->getValue());
+        usort($stock, fn (StockCoin $a, StockCoin $b): int => $b->coin()->cents() <=> $a->coin()->cents());
 
-        return array_reduce(
-            array_map(
-                fn (StockCoin $stockCoin): array => array_fill(0, $stockCoin->count()->value(), $stockCoin->coin()),
-                $stock
-            ),
-            fn (array $carry, array $coins): array => array_merge($carry, $coins),
-            []
-        );
+        return $stock;
     }
 
     private function ensureStockCoin(Coin $coin): StockCoin
@@ -111,6 +122,7 @@ class CashRegister
         foreach ($change->coins() as $coin) {
             $stockCoin = $this->ensureStockCoin($coin);
             $stockCoin->setCount($stockCoin->count()->dec());
+            $this->total = $this->total->subtract($coin->toMoney());
         }
     }
 }
